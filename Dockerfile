@@ -1,21 +1,21 @@
 # Use official Node.js LTS image
 FROM node:20-slim
 
-# Create app directory
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (if you have one)
+# Copy package.json first for caching dependencies
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of your app
+# Copy rest of the app
 COPY . .
 
-# Expose the port Cloud Run expects
+# Expose port Cloud Run expects
 ENV PORT 8080
 EXPOSE 8080
 
-# Run the app
+# Start the app
 CMD ["node", "index.js"]
