@@ -1,25 +1,23 @@
+// index.js
 const express = require('express');
 const fetch = require('node-fetch');
 const app = express();
-const port = process.env.PORT || 8080;
 
 app.get('/', async (req, res) => {
-  const nhlUrl = req.query.url;
-  if (!nhlUrl) {
-    res.status(400).send("Missing ?url= parameter");
-    return;
-  }
+  const url = req.query.url;
+  if (!url) return res.status(400).send("Missing ?url= parameter");
 
   try {
-    const response = await fetch(nhlUrl);
+    const response = await fetch(url);
     const data = await response.text();
-    res.setHeader('Content-Type', 'application/json');
+    res.set('Content-Type', 'application/json');
     res.send(data);
-  } catch (err) {
-    res.status(500).send("Error fetching NHL API: " + err);
+  } catch (e) {
+    res.status(500).send("Error fetching URL: " + e.message);
   }
 });
 
-app.listen(port, () => {
-  console.log(`NHL Proxy running on port ${port}`);
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
